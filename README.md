@@ -1,16 +1,19 @@
 # Photo Gallery
 
-A small Rails + Hotwire photo gallery app for the Clever coding challenge.
+A small Rails + Hotwire photo gallery application demonstrating server-rendered interactivity with Turbo Frames, Stimulus, and Tailwind CSS.
 
-Users can sign in, browse seeded photos, and like or unlike photos without a full page reload.
+Users can authenticate, browse seeded photos, and like or unlike photos without full page reloads.
 
-## Requirements
+## Tech Stack
 
-- Ruby 4.0.3
-- Bundler 4.0.6
-- SQLite3
-
-This app was built with Rails 8.1.3, Devise, Turbo, Stimulus, and Tailwind.
+* Ruby 4.0.3
+* Rails 8.1.3
+* SQLite3
+* Devise
+* Turbo
+* Stimulus
+* Tailwind CSS
+* RSpec
 
 ## Setup
 
@@ -22,40 +25,62 @@ bin/rails db:prepare
 bin/rails db:seed
 ```
 
-## Login Credentials
+## Demo Credentials
 
 ```text
 Email: demo@example.com
 Password: password123
 ```
 
-The demo user and photos are created from `db/seeds.rb`. Photo data is loaded from `db/photos.csv` into the database.
+The demo user and seeded photo data are created from `db/seeds.rb`. Photo records are imported from `db/photos.csv` and persisted in the database rather than read at runtime.
 
-## Run The App
+## Running the Application
 
 ```sh
 bin/dev
 ```
 
-Then open:
+Then visit:
 
 ```text
 http://localhost:3000
 ```
 
-## Run Tests
+## Running the Test Suite
 
 ```sh
 bundle exec rspec
 ```
 
-The test suite covers authentication redirect behavior, duplicate-like validation, and the like/unlike user flow.
+The test suite includes coverage for:
+
+* Authentication redirect behavior
+* Duplicate-like prevention
+* Like/unlike interaction flow
 
 ## Implementation Notes
 
-- Authentication uses Devise with a seeded demo user because the challenge does not require sign-up.
-- Photos are imported from `db/photos.csv` in `db/seeds.rb` and persisted in the database, so the CSV is not read at runtime.
-- Likes are modeled with a join table between users and photos. A unique database index on `[user_id, photo_id]` ensures each user can like a photo only once.
-- The like/unlike button is wrapped in a Turbo Frame so only that photo's like UI updates after each action.
-- A small Stimulus controller provides immediate icon feedback while Turbo replaces the frame with the persisted server state.
-- 3 Meaningful Rspec specs to exercise core functionality and requirements
+### Authentication
+
+Authentication is implemented with Devise using a seeded demo user, since self-service registration was not required for the challenge.
+
+### Photo Importing
+
+Photo data is imported from `db/photos.csv` during seeding and persisted in the database to avoid runtime CSV parsing.
+
+### Likes
+
+Likes are modeled as a join table between users and photos.
+
+A unique composite database index on `[user_id, photo_id]` ensures a user can only like a photo once while maintaining database-level integrity.
+
+### Hotwire Interactivity
+
+The like/unlike UI is isolated within a Turbo Frame so only the relevant portion of the page updates after interaction.
+
+Turbo handles server-driven UI replacement, while a lightweight Stimulus controller provides immediate visual feedback during interactions.
+
+### Testing
+
+The application includes focused RSpec coverage for core business rules and user flows rather than exhaustive framework-level testing.
+
